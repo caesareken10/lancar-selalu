@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Parabellum",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/parabellum/bin/Debug/net10.0/parabellum.exe",
+            "args":[],  
+            "cwd": "${workspaceFolder}",
+            "console": "externalTerminal",
+            "stopAtEntry": false 
+        }
+    ]
+
+}

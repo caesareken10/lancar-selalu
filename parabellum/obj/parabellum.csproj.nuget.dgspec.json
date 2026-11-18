@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Birgitta Leonora\\OneDrive\\Desktop\\parabellum\\parabellum.csproj": {}
+    "C:\\Users\\caesa\\lancar-selalu\\parabellum\\parabellum.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Birgitta Leonora\\OneDrive\\Desktop\\parabellum\\parabellum.csproj": {
+    "C:\\Users\\caesa\\lancar-selalu\\parabellum\\parabellum.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Birgitta Leonora\\OneDrive\\Desktop\\parabellum\\parabellum.csproj",
+        "projectUniqueName": "C:\\Users\\caesa\\lancar-selalu\\parabellum\\parabellum.csproj",
         "projectName": "parabellum",
-        "projectPath": "C:\\Users\\Birgitta Leonora\\OneDrive\\Desktop\\parabellum\\parabellum.csproj",
-        "packagesPath": "C:\\Users\\Birgitta Leonora\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Birgitta Leonora\\OneDrive\\Desktop\\parabellum\\obj\\",
+        "projectPath": "C:\\Users\\caesa\\lancar-selalu\\parabellum\\parabellum.csproj",
+        "packagesPath": "C:\\Users\\caesa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\caesa\\lancar-selalu\\parabellum\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Birgitta Leonora\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\caesa\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"

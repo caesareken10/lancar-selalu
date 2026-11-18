@@ -389,5 +389,42 @@ class Parabellum
             "The golem's eyes flare with amber light. It rises with a grinding groan.",
             "Stone Golem: INTRUDER. DESTROY." }
     };
-
+    static void SetupConsole()
+    {
+        System.Diagnostics.Process.Start("cmd", "/c mode con: cols=80 lines=30").WaitForExit(); //opens a console 80x30, waits for program to finish
+    }
+    static void Main()
+    {
+        SetupConsole();
+        Console.WriteLine(@"                              ####   ###  ####   ###  ####  ##### #     #     #   # #   #");
+        Console.WriteLine(@"                              #   # #   # #   # #   # #   # #     #     #     #   # ## ##");
+        Console.WriteLine(@"                              ####  ##### ####  ##### ####  ####  #     #     #   # # # #");
+        Console.WriteLine(@"                              #     #   # #  #  #   # #   # #     #     #     #   # #   #");
+        Console.WriteLine(@"                              #     #   # #   # #   # ####  ##### ##### #####  ###  #   #");
+        Console.WriteLine();
+        Console.WriteLine(@"                                                          |>");
+        Console.WriteLine(@"                                                          A");
+        Console.WriteLine(@"                                                         | |");
+        Console.WriteLine(@"                                                        |   |");
+        Console.WriteLine(@"          /\                         <|                |     |                    |>             /\");
+        Console.WriteLine(@"         /  \                        /\               |       |                  /\             /  \");
+        Console.WriteLine(@"        /~~~~\       /\             /  \      |>     |         |         <|     /  \           /~~~~\");
+        Console.WriteLine(@"       /      \     /  \           /    \     |_____|___________|_________|    /    \         /      \");
+        Console.WriteLine(@"      /        \   /~~~~\         /______\___|_|__|  |__|  |__|  |__|  |_|_|__/______\       /        \");
+        Console.WriteLine(@"     /          \ /      \        | ___  |  |  ||  |  ||  |  ||  |  ||  |  |  | ___ |       /          \    /\");
+        Console.WriteLine(@"    /            \        \       ||   | |__|__||__|__||__|__||__|__||__|__|__||   ||      /            \  /~~\");
+        Console.WriteLine(@"   /              \        \      ||___|   |   /\   |  |   |   |   |   |   |  ||   ||     /              \/    \");
+        Console.WriteLine(@"  /                \        \ ___ ||___|___|__/__\__|__|___|___|___|___|___|__||___||____/                \     \");
+        Console.WriteLine(@" /                  \       |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |                  \     \");
+        Console.WriteLine(@"/                    \      |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|                   \     \");
+        Console.WriteLine(@"_________________________/_________________________________________________________________\____________________________");
+        Console.WriteLine(@"                         _/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\_");
+        Console.WriteLine(@"                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        Console.WriteLine(@"                                      +------------------------------------+");
+        Console.WriteLine(@"                                      |                                    |");
+        Console.WriteLine(@"                                      |       Press Enter to Continue      |");
+        Console.WriteLine(@"                                      |                                    |");
+        Console.WriteLine(@"                                      +------------------------------------+");
+        Console.ReadLine();
+    }
 }

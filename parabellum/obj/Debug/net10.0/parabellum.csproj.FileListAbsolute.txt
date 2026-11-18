@@ -1,0 +1,15 @@
+C:\Users\caesa\lancar-selalu\parabellum\bin\Debug\net10.0\parabellum.exe
+C:\Users\caesa\lancar-selalu\parabellum\bin\Debug\net10.0\parabellum.deps.json
+C:\Users\caesa\lancar-selalu\parabellum\bin\Debug\net10.0\parabellum.runtimeconfig.json
+C:\Users\caesa\lancar-selalu\parabellum\bin\Debug\net10.0\parabellum.dll
+C:\Users\caesa\lancar-selalu\parabellum\bin\Debug\net10.0\parabellum.pdb
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.AssemblyInfoInputs.cache
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.AssemblyInfo.cs
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.csproj.CoreCompileInputs.cache
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.sourcelink.json
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.dll
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\refint\parabellum.dll
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.pdb
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\parabellum.genruntimeconfig.cache
+C:\Users\caesa\lancar-selalu\parabellum\obj\Debug\net10.0\ref\parabellum.dll
