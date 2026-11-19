@@ -427,4 +427,199 @@ class Parabellum
         Console.WriteLine(@"                                      +------------------------------------+");
         Console.ReadLine();
     }
+
+    static void Main()
+    {
+        Console.Title = "PARABELLUM";
+        SetupConsole();
+        ShowIntroScreen();
+
+        PrepareSampleFiles();
+        poolCount = EncounterPool();
+        if (poolCount < MinPoolSize)
+        {
+            Console.WriteLine($"{FileEncounters} needs at least {MinPoolSize} valid lines, found {poolCount}.");
+            return;
+        }
+
+        bool running = true;
+        while (running)
+        {
+            ShowTitleScreen();
+            Console.WriteLine();
+            OutLine(Center("[1] New Game       [2] Leaderboard       [3] Quit"), ConsoleColor.White);
+            Console.WriteLine();
+            int choice = GetPlayerInput("  > ", 1, 3);
+
+            switch (choice)
+            {
+                case 1:
+                    PlayRun();
+                    break;
+                case 2:
+                    LeaderboardMenu();
+                    break;
+                case 3:
+                    running = false;
+                    Console.WriteLine("  Farewell, traveler.");
+                    break;
+            }
+        }
+    }
+
+    static void PlayRun()
+    {
+        LoadPlayer();
+        bool won = RunGameLoop();
+        if (won)
+        {
+            if (playerClass == ClassWarrior) { WarriorEnding(); }
+            else { MageEnding(); }
+        }
+        else
+        {
+            string[] deathLines = { "Your journey ends here. Deaths are permanent, the road begins anew." };
+            DisplayDialogue(deathLines, "YOU HAVE FALLEN", skullArt, -1, 0);
+        }
+        FinishRun(won);
+    }
+
+    static void ClearScreen()
+    {
+        Console.Clear();
+        lineCount = 0;
+    }
+
+    static void Out(string text, ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+        Console.Write(text);
+        Console.ResetColor();
+    }
+
+    static void Nl()
+    {
+        Console.WriteLine();
+        lineCount = lineCount + 1;
+    }
+
+    static void OutLine(string text, ConsoleColor color)
+    {
+        Out(text, color);
+        Nl();
+    }
+
+    static void PadTo(int rows)
+    {
+        while (lineCount < rows) { Nl(); }
+    }
+
+    static string Spaces(int count)
+    {
+        if (count <= 0) { return ""; }
+        return new string(' ', count);
+    }
+
+    static string Center(string text)
+    {
+        return Spaces((ScreenWidth - text.Length) / 2) + text;
+    }
+
+    static string PadCenter(string text, int width)
+    {
+        return Spaces((width - text.Length) / 2) + text;
+    }
+
+    static string Fit(string text, int width)
+    {
+        if (text.Length > width) { return text.Substring(0, width); }
+        return text;
+    }
+
+    static string Signed(int value)
+    {
+        if (value > 0) { return "+" + value; }
+        return Convert.ToString(value);
+    }
+
+    static void WaitEnter(string message)
+    {
+        Out(message, ConsoleColor.DarkGray);
+        Console.ReadLine();
+    }
+
+    static int ToInt(string text)
+    {
+        int value;
+        if (int.TryParse(text, out value)) { return value; }
+        return 0;
+    }
+
+    static string ClassName()
+    {
+        if (playerClass == ClassWarrior) { return "Warrior"; }
+        return "Mage";
+    }
+
+    static void TypeText(string text, int index)
+    {
+        if (index >= text.Length) { return; }
+
+        Console.Write(text[index]);
+        if (!typingSkipped)
+        {
+            if (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
+                typingSkipped = true;
+            }
+            else
+            {
+                Thread.Sleep(TypeDelayMs);
+            }
+        }
+        TypeText(text, index + 1);
+    }
+
+    static string[] WrapText(string text, int width)
+    {
+        string[] lines = new string[MaxWrapLines];
+        int count = 0;
+        string current = "";
+        string[] words = text.Split(' ');
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (current.Length == 0)
+            {
+                current = words[i];
+            }
+            else if (current.Length + 1 + words[i].Length <= width)
+            {
+                current = current + " " + words[i];
+            }
+            else
+            {
+                if (count < MaxWrapLines) { lines[count] = current; count = count + 1; }
+                current = words[i];
+            }
+        }
+        if (current.Length > 0 && count < MaxWrapLines) { lines[count] = current; count = count + 1; }
+        for (int i = count; i < MaxWrapLines; i++) { lines[i] = ""; }
+        return lines;
+    }
+
+    static int GetPlayerInput(string prompt, int min, int max)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string raw = Console.ReadLine();
+            int value;
+            if (int.TryParse(raw, out value) && value >= min && value <= max)
+            {
+                return value;
+            }
+            Console.WriteLine($"  Invalid input. Enter a number from {min} to {max}.");
+        }
+    }
 }
