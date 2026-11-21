@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 
@@ -389,18 +389,101 @@ class Parabellum
             "The golem's eyes flare with amber light. It rises with a grinding groan.",
             "Stone Golem: INTRUDER. DESTROY." }
     };
+
+    static string[] bossIntro =
+    {
+        "The gates of the Black Keep groan open. Torches flare along a hall of bones.",
+        "Warlord Malachar: So the little hero finally arrives. I have waited long.",
+        "Malachar: Parabellum, they say. Prepare for war. Then prepare to die!"
+    };
+
+    static string[] warriorEndingLines =
+    {
+        "Malachar crashes to the ground. The keep falls silent.",
+        "You plant your blade in the stone and raise your fist to the dawn.",
+        "The war is over. But the songs of the warrior who prepared for it will last forever."
+    };
+
+    static string[] mageEndingLines =
+    {
+        "The last of the arcane storm fades. Malachar is only ash on the wind.",
+        "Your voice still echoes in the chamber, every word perfectly spoken.",
+        "The war is over. Scholars will study your incantations for a hundred years."
+    };
+
+    static string[] tutorialRun =
+    {
+        "Survive " + EncountersToBoss + " encounters, then face the final boss.",
+        "Each round you are shown " + ChoicesPerRound + " paths. Pick one.",
+        "Read the descriptions: judge the outcome of your choice yourself!",
+        "Paths can be fights, kind strangers, traps or strange items.",
+        "An encounter never repeats within one run.",
+        "You start with " + PlayerStartHp + " HP. Death is PERMANENT: you restart from zero.",
+        "You always act first in a fight.",
+        "Winning a fight heals you for " + RestHealAmount + " HP."
+    };
+
+    static string[] tutorialWarrior =
+    {
+        "You gain 1 energy at the end of every turn (you start with " + StartEnergy + ").",
+        "Stronger moves cost more energy. Slash is free.",
+        "",
+        "[1] Slash                 0 EN   " + SlashDamage + " damage",
+        "[2] Overpowering Blow     2 EN   " + OverpowerDamage + " damage",
+        "[3] Roar                  1 EN   your next attack x" + RoarMultiplier,
+        "[4] Raise Shield          1 EN   -" + ShieldReduce + " damage taken, " + ShieldTurns + " turns",
+        "[5] Executioner's Stance  4 EN   " + ExecutionerDamage + " damage"
+    };
+
+    static string[] tutorialMage =
+    {
+        "No energy, but you must TYPE each incantation exactly.",
+        "Capitalization counts. A typo wastes your whole turn!",
+        "Press Enter on an empty line to cancel without losing the turn.",
+        "",
+        "Arcane Tempest unlocks after " + TempestUnlockMoves + " successful spells.",
+        "Mistype the Tempest and it hits YOU for " + TempestBacklash + " damage.",
+        "Poison Spray burns the enemy over several turns."
+    };
+
+    static string[] tutorialItems =
+    {
+        "[1] Attack / Cast Spell   [2] Items   [3] Guard",
+        "",
+        "Guard blocks " + GuardBlockPercent + "% of the enemy's next attack.",
+        "Items are FREE: you can drink a potion and still attack.",
+        "You start with 1 Health Potion. Inventory space is unlimited.",
+        "The enemy shows what it will do next, plan around it!"
+    };
+
     static void SetupConsole()
     {
-        System.Diagnostics.Process.Start("cmd", "/c mode con: cols=80 lines=30").WaitForExit(); //opens a console 80x30, waits for program to finish
+        // The VS Code launch configuration opens the external terminal.
+        // This method only attempts to resize that terminal to the game's layout.
+        try
+        {
+            if (!Console.IsOutputRedirected)
+            {
+                Console.SetWindowSize(ScreenWidth, 30);
+            }
+        }
+        catch
+        {
+            // Some terminals do not allow programmatic resizing.
+            // The game can still run using the terminal's current dimensions.
+        }
     }
-    static void Main()
+
+    static void ShowIntroScreen()
     {
-        SetupConsole();
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(@"                              ####   ###  ####   ###  ####  ##### #     #     #   # #   #");
         Console.WriteLine(@"                              #   # #   # #   # #   # #   # #     #     #     #   # ## ##");
         Console.WriteLine(@"                              ####  ##### ####  ##### ####  ####  #     #     #   # # # #");
         Console.WriteLine(@"                              #     #   # #  #  #   # #   # #     #     #     #   # #   #");
         Console.WriteLine(@"                              #     #   # #   # #   # ####  ##### ##### #####  ###  #   #");
+        Console.ResetColor();
         Console.WriteLine();
         Console.WriteLine(@"                                                          |>");
         Console.WriteLine(@"                                                          A");
@@ -420,11 +503,14 @@ class Parabellum
         Console.WriteLine(@"_________________________/_________________________________________________________________\____________________________");
         Console.WriteLine(@"                         _/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\_");
         Console.WriteLine(@"                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(@"                                      +------------------------------------+");
         Console.WriteLine(@"                                      |                                    |");
         Console.WriteLine(@"                                      |       Press Enter to Continue      |");
         Console.WriteLine(@"                                      |                                    |");
         Console.WriteLine(@"                                      +------------------------------------+");
+        Console.ResetColor();
         Console.ReadLine();
     }
 
@@ -622,4 +708,188 @@ class Parabellum
             Console.WriteLine($"  Invalid input. Enter a number from {min} to {max}.");
         }
     }
-}
+
+    static void DrawHpBar(int hp, int maxHp, int width)
+    {
+        if (hp < 0) { hp = 0; }
+        int filled = 0;
+        int percent = 0;
+        if (maxHp > 0)
+        {
+            filled = hp * width / maxHp;
+            percent = hp * 100 / maxHp;
+        }
+        if (hp > 0 && filled == 0) { filled = 1; }
+        if (filled > width) { filled = width; }
+
+        ConsoleColor color = ConsoleColor.Green;
+        if (percent <= 50) { color = ConsoleColor.Yellow; }
+        if (percent <= 25) { color = ConsoleColor.Red; }
+
+        Out("[", ConsoleColor.Gray);
+        Out(new string('#', filled), color);
+        Out(new string('-', width - filled), ConsoleColor.DarkGray);
+        Out("]", ConsoleColor.Gray);
+    }
+
+    static int BarWidthFor(int maxHp, int cap)
+    {
+        if (maxHp > cap) { return cap; }
+        if (maxHp < 1) { return 1; }
+        return maxHp;
+    }
+
+    static void PrintSprite(string[] sprite)
+    {
+        int widest = 0;
+        for (int i = 0; i < sprite.Length; i++)
+        {
+            if (sprite[i].Length > widest) { widest = sprite[i].Length; }
+        }
+        string margin = Spaces((ScreenWidth - widest) / 2);
+        for (int r = 0; r < SpriteRows; r++)
+        {
+            if (r < sprite.Length) { OutLine(margin + sprite[r], ConsoleColor.Cyan); }
+            else { Nl(); }
+        }
+    }
+
+    static string BuildStatus(bool inCombat)
+    {
+        string s = "";
+        if (inCombat)
+        {
+            if (playerClass == ClassWarrior) { s = s + $"Energy: {energy}  "; }
+            else { s = s + $"Spells cast: {movesUsed}  "; }
+            if (nextMultiplier > 1) { s = s + $"NEXT HIT x{nextMultiplier}  "; }
+            if (flatReduceTurns > 0) { s = s + $"Ward -{flatReduce} ({flatReduceTurns}t)  "; }
+            if (poisonTicks > 0) { s = s + $"Enemy poisoned ({poisonTicks}t)  "; }
+            if (enemyWeaken > 0) { s = s + "Enemy weakened  "; }
+            if (pactDoomed) { s = s + "PACT DUE!  "; }
+        }
+        if (damageBonus != 0) { s = s + $"Damage {Signed(damageBonus)}  "; }
+        s = s + $"Potions: {inventory[ItemPotion]}";
+        return s;
+    }
+
+    static void ShowTitleScreen()
+    {
+        ClearScreen();
+        
+        string[] titleArt =
+        {
+            @" ____  " + @"    _    " + @" ____  " + @"    _    " + @" ____  " + @" _____ " + @" _     " + @" _     " + @" _   _ " + @" __  __ ",
+            @"|  _ \ " + @"   / \   " + @"|  _ \ " + @"   / \   " + @"| __ ) " + @"| ____|" + @"| |    " + @"| |    " + @"| | | |" + @"|  \/  |",
+            @"| |_) |" + @"  / _ \  " + @"| |_) |" + @"  / _ \  " + @"|  _ \ " + @"|  _|  " + @"| |    " + @"| |    " + @"| | | |" + @"| |\/| |",
+            @"|  __/ " + @" / ___ \ " + @"|  _ < " + @" / ___ \ " + @"| |_) |" + @"| |___ " + @"| |___ " + @"| |___ " + @"| |_| |" + @"| |  | |",
+            @"|_|    " + @"/_/   \_\" + @"|_| \_\" + @"/_/   \_\" + @"|____/ " + @"|_____|" + @"|_____|" + @"|_____|" + @" \___/ " + @"|_|  |_|"
+        };
+
+        Nl(); Nl(); Nl();
+        for (int i = 0; i < titleArt.Length; i++)
+        {
+            OutLine(Center(titleArt[i]), ConsoleColor.Red);
+        }
+        Nl();
+        OutLine(Center("<<<====[  A Turn-Based Medieval RPG  ]====>>>"), ConsoleColor.Yellow);
+        OutLine(Center("para bellum  -  prepare for war"), ConsoleColor.DarkGray);
+        Nl();
+        OutLine(Center("Choose a Warrior or a Mage. Every run is different."), ConsoleColor.Gray);
+        OutLine(Center("Death is permanent."), ConsoleColor.Gray);
+        Nl(); Nl();
+        OutLine(Center(CreditsLine), ConsoleColor.DarkGray);
+    }
+
+    static void LoadPlayer()
+    {
+        ClearScreen();
+        OutLine(Center("=== CREATE YOUR HERO ==="), ConsoleColor.Yellow);
+        Nl();
+
+        string name = "";
+        bool valid = false;
+        while (!valid)
+        {
+            Console.Write($"  Username ({MinNameLength}-{MaxNameLength} characters): ");
+            name = Console.ReadLine();
+            if (name == null) { name = ""; }
+            name = name.Trim();
+
+            if (name.Length < MinNameLength || name.Length > MaxNameLength)
+            {
+                Console.WriteLine($"  Name must be {MinNameLength} to {MaxNameLength} characters long.");
+            }
+            else if (name.Contains(","))
+            {
+                
+                Console.WriteLine("  Please do not use commas in your name.");
+            }
+            else
+            {
+                valid = true;
+            }
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("  Choose your class:");
+        Console.WriteLine("    [1] WARRIOR - pick moves from a menu, energy grows every turn.");
+        Console.WriteLine("    [2] MAGE    - type incantations EXACTLY. One typo and you do nothing.");
+        int chosenClass = GetPlayerInput("  > ", ClassWarrior, ClassMage);
+
+        Console.WriteLine();
+        int wantTutorial = GetPlayerInput("  Play the tutorial? [1] Yes  [2] Skip: ", 1, 2);
+
+        ResetRun(name, chosenClass);
+        if (wantTutorial == 1) { RunTutorial(); }
+    }
+
+    static void ResetRun(string name, int chosenClass)
+    {
+        playerName = name;
+        playerClass = chosenClass;
+        playerMaxHp = PlayerStartHp;
+        playerHp = PlayerStartHp;
+        damageBonus = 0;
+        for (int i = 0; i < ItemCount; i++) { inventory[i] = 0; }
+        inventory[ItemPotion] = 1;
+        for (int i = 0; i < poolCount; i++) { encUsed[i] = false; }
+        encountersDone = 0;
+        combatsWon = 0;
+        totalTurns = 0;
+        runLogCount = 0;
+    }
+
+    static void RunTutorial()
+    {
+        DrawBox("HOW A RUN WORKS", tutorialRun);
+        if (playerClass == ClassWarrior) { DrawBox("WARRIOR - ENERGY AND STEEL", tutorialWarrior); }
+        else { DrawBox("MAGE - SPEAK THE WORDS", tutorialMage); }
+        DrawBox("ACTIONS, ITEMS AND GUARD", tutorialItems);
+    }
+
+    static void DrawBox(string title, string[] lines)
+    {
+        int widest = title.Length;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].Length > widest) { widest = lines[i].Length; }
+        }
+        int width = widest + 2;
+        string margin = Spaces((ScreenWidth - width - 2) / 2);
+        int boxHeight = lines.Length + 4;
+        int topPad = (ScreenHeight - boxHeight - 2) / 2;
+
+        ClearScreen();
+        for (int i = 0; i < topPad; i++) { Console.WriteLine(); }
+        OutLine(margin + "+" + new string('-', width) + "+", ConsoleColor.Yellow);
+        OutLine(margin + "|" + PadCenter(title, width).PadRight(width) + "|", ConsoleColor.Yellow);
+        OutLine(margin + "+" + new string('-', width) + "+", ConsoleColor.Yellow);
+        for (int i = 0; i < lines.Length; i++)
+        {
+            OutLine(margin + "| " + lines[i].PadRight(width - 2) + " |", ConsoleColor.White);
+        }
+        OutLine(margin + "+" + new string('-', width) + "+", ConsoleColor.Yellow);
+        Console.WriteLine();
+        WaitEnter(margin + "[Press ENTER to continue]");
+    }
+    
